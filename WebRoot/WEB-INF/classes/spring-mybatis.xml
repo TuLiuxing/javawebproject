@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"  
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	http://www.springframework.org/schema/aop   
+    http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	
+	 <!-- 扫描所有的包 -->
+ 	<context:component-scan base-package="*"/>
+	 <!-- 连接数据库的 -->
+ 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"  value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/duanzu"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="123"></property>
+	</bean>
+	
+	 	<!-- mybatis配置 -->
+ 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 实例化sqlSessionFactory时需要使用上述配置好的数据源以及SQL映射文件 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 自动扫描Mybatis的Mapper.xml文件 -->
+		<property name="mapperLocations" value="classpath:com/dz/mapping/*.xml" />	
+	
+	</bean>
+	
+	 	<!-- 创建接口的实现类,然后这个类会自动注入到service层 -->
+ 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+       <!-- 扫描com.dz.dao这个包以及它的子包下的所有映射接口类 -->
+        <property name="basePackage" value="com.dz.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+   </bean>
+	
+
+  
+</beans>
